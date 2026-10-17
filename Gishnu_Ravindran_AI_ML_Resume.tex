@@ -1,0 +1,212 @@
+%-------------------------
+% Resume in LaTeX
+% Author : Gishnu Ravindran
+% Aligned for AI / ML Engineer Roles
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large\color{NavyBlue}
+}{}{0em}{}[\color{NavyBlue}\titlerule \vspace{-5pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Gishnu Ravindran} \\ \vspace{4pt}
+    \textbf{\Large \color{NavyBlue} AI / ML Engineer} \\ \vspace{6pt}
+    \small \faPhone\ +91 9778156037 $|$ 
+    \href{mailto:gishnuravindran02@gmail.com}{\faEnvelope\ gishnuravindran02@gmail.com} $|$ 
+    \href{https://linkedin.com/in/gishnuravindran}{\faLinkedin\ linkedin.com/in/gishnuravindran} $|$
+    \href{https://github.com/Gishnu02}{\faGithub\ github.com/Gishnu02}
+\end{center}
+
+
+%-----------PROFESSIONAL SUMMARY-----------
+\section{Professional Summary}
+\small{
+Results-driven \textbf{AI/ML Engineer} with expertise in designing, training, and deploying end-to-end Machine Learning, Deep Learning, and Operations Research optimization systems. Proficient in Python, XGBoost, Scikit-learn, PyTorch, Google OR-Tools, and FastAPI microservices. Experienced in building real-time predictive models, computer vision pipelines, and data-driven backend architectures that bridge theoretical algorithms with scalable production software.
+}
+
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Core Languages}{: Python, C/C++, SQL, JavaScript} \\
+     \textbf{Machine Learning \& Deep Learning}{: Supervised/Unsupervised Learning, XGBoost, LightGBM, Scikit-learn, PyTorch, TensorFlow, Neural Networks (DNN, CNN), MediaPipe, OpenCV} \\
+     \textbf{Optimization \& Operations Research}{: Google OR-Tools (CVRP, CVRPTW), Constraint Programming, Combinatorial Optimization, Heuristic Search} \\
+     \textbf{Data Engineering \& Analytics}{: Pandas, NumPy, SciPy, Matplotlib, Data Preprocessing, Feature Engineering, Explainable AI (XAI)} \\
+     \textbf{Backend \& Deployment}{: FastAPI, Django, Flask, RESTful APIs, Git, GitHub, Docker, Linux, Uvicorn}
+    }}
+ \end{itemize}
+
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {AT Bots}{May 2026 -- Present}
+      {AI / ML Engineer}{Kottayam, Kerala}
+      \resumeItemListStart
+        \resumeItem{Architect, train, and deploy production machine learning algorithms and computer vision pipelines for intelligent automation.}
+        \resumeItem{Develop data preprocessing and feature extraction workflows to handle noisy sensor and telemetry streams.}
+        \resumeItem{Optimize model inference latency and memory footprints, containerizing services using FastAPI and Docker for scalable deployment.}
+        \resumeItem{Collaborate on continuous model evaluation, drift monitoring, and automated retraining pipelines to maintain high accuracy.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Codedu Technologies}{Aug 2025 -- Apr 2026}
+      {Python Developer Intern}{Kochi, Kerala}
+      \resumeItemListStart
+        \resumeItem{Engineered backend microservices, data ingestion pipelines, and RESTful APIs using Python and Django/FastAPI.}
+        \resumeItem{Automated data cleaning and transformation routines, reducing preprocessing turnaround time by 35\%.}
+        \resumeItem{Designed optimized relational database schemas and SQL queries to support high-throughput data transactions.}
+        \resumeItem{Participated in unit testing, debugging, and continuous integration workflows adhering to agile development standards.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Realweb}{Aug 2024 -- Jul 2025}
+      {Software Developer Trainee}{Kochi, Kerala}
+      \resumeItemListStart
+        \resumeItem{Developed backend modules and data processing scripts in Python, integrating core web services with client databases.}
+        \resumeItem{Collaborated with senior engineers to troubleshoot application logic, improve code reusability, and resolve performance bottlenecks.}
+        \resumeItem{Assisted in building responsive data dashboards and internal tooling to monitor system metrics.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+
+      \resumeProjectHeading
+          {\textbf{RouteMind -- AI Route Optimization \& Dynamic ETA Prediction Platform} $|$ \emph{Python, OR-Tools, XGBoost, FastAPI, Leaflet}}{github.com/Gishnu02/ml-projects}
+          \resumeItemListStart
+            \resumeItem{Developed a hybrid AI dispatch platform combining \textbf{Google OR-Tools} (CVRPTW) with an \textbf{XGBoost Regressor} to predict delivery delays and dynamically optimize multi-vehicle delivery routes.}
+            \resumeItem{Trained an XGBoost model achieving an $\mathbf{R^2}$ \textbf{score of 0.9814} and \textbf{MAE of 1.13 minutes} across 25,000 delivery dispatches considering weather, traffic, and localized road incidents.}
+            \resumeItem{Constructed an ML-adjusted duration matrix fed directly into constraint programming algorithms, proactively bypassing congestion hotspots to preserve customer SLAs.}
+            \resumeItem{Engineered sub-100ms continuous re-optimization triggered by interactive map order drops, roadblocks, and environmental conditions.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Signify -- Real-Time Sign Language Translation System} $|$ \emph{Python, OpenCV, MediaPipe, Deep Learning, TensorFlow}}{}
+          \resumeItemListStart
+            \resumeItem{Engineered a real-time computer vision system that translates sign language hand gestures into synthesized text and speech.}
+            \resumeItem{Extracted 21 3D hand coordinates per frame using \textbf{MediaPipe} and trained a Deep Neural Network classifier achieving \textbf{94\%+ classification accuracy}.}
+            \resumeItem{Optimized frame processing and inference pipeline for real-time video stream prediction on standard consumer webcams.}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{Automatic Crack Detection System using Deep Learning} $|$ \emph{Python, Deep Neural Networks, IoT, Image Processing}}{}
+          \resumeItemListStart
+            \resumeItem{Engineered an automated structural health monitoring system detecting micro-cracks in concrete structures using sensor data and Deep Neural Networks (DNN).}
+            \resumeItem{Implemented computer vision filtering, edge enhancement, and noise reduction techniques for accurate crack segmentation and severity grading.}
+            \resumeItem{Integrated telemetry hardware with predictive ML software for automated safety alerts and predictive structural maintenance.}
+            \resumeItem{\textbf{Awarded Best Internal Project} at the Srishti National Level Project Competition 2025.}
+          \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Saintgits College of Engineering}{2021 -- 2025}
+      {Bachelor of Technology (B.Tech) in Electronics and Communication Engineering}{Kottayam, Kerala}
+  \resumeSubHeadingListEnd
+
+
+%-----------ACHIEVEMENTS & LEADERSHIP-----------
+\section{Achievements \& Leadership}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Best Internal Project Award}{: Received 1st Prize at Srishti National Level Project Competition 2025 for Deep Learning Crack Detection System.} \\
+     \textbf{Creative Head -- AI Club}{: Spearheaded technical AI sessions, hackathons, and machine learning study groups at Saintgits College.} \\
+     \textbf{Media Head -- TinkerHub Saintgits}{: Led community initiatives, technical workshops, and developer meetups.}
+    }}
+ \end{itemize}
+
+
+%-----------CERTIFICATIONS-----------
+\section{Certifications}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     $\bullet$ Python for Data Science, Machine Learning \& Deep Learning \\
+     $\bullet$ Digital Signal Processing (DSP) \& Modeling of Feedback Systems \\
+     $\bullet$ RESTful API Development with Python and Modern Web Frameworks
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}
