@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RouteMind - AI Route Optimization & ETA Prediction</title>
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="brand-title-wrap">
+        <span class="brand-title">RouteMind</span>
+        <div class="brand-meta">
+          <span class="live-indicator">
+            <span class="pulse-dot"></span> Live AI Core
+          </span>
+          <span class="engine-tag">OR-Tools + XGBoost v3.4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn btn-secondary btn-sm" id="btnCompareModal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        Compare AI vs Classical
+      </button>
+
+      <button class="btn btn-secondary btn-sm" id="btnRetrainModel">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        Re-Train XGBoost
+      </button>
+
+      <button class="btn btn-secondary btn-sm" id="btnResetScenario">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Preset
+      </button>
+
+      <button class="btn btn-primary btn-sm" id="btnOptimize">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Re-Optimize Now
+      </button>
+    </div>
+  </header>
+
+  <!-- SCENARIO & ENVIRONMENTAL CONTROLS -->
+  <div class="scenario-bar">
+    <div class="scenario-group">
+      <span class="scenario-label">🌤️ Weather</span>
+      <select id="weatherSelect" class="select-input">
+        <option value="clear">☀️ Clear Skies (Dry Road)</option>
+        <option value="rain" selected>🌧️ Light Rain (-15% Speed)</option>
+        <option value="heavy_rain">⛈️ Heavy Storm (-40% Speed)</option>
+        <option value="fog">🌫️ Dense Fog (Low Visibility)</option>
+        <option value="snow">❄️ Snow / Ice Slip Hazard</option>
+      </select>
+    </div>
+
+    <div class="scenario-group">
+      <span class="scenario-label">🚦 Congestion</span>
+      <div class="slider-container">
+        <input type="range" id="trafficSlider" class="slider-input" min="1.0" max="2.6" step="0.1" value="1.5">
+        <span id="trafficBadge" class="traffic-badge traffic-moderate">1.5x (Rush)</span>
+      </div>
+    </div>
+
+    <div class="scenario-group">
+      <span class="scenario-label">⏰ Dispatch Window</span>
+      <select id="todSelect" class="select-input">
+        <option value="morning_rush" selected>08:30 AM (Morning Rush)</option>
+        <option value="midday">01:00 PM (Midday Standard)</option>
+        <option value="evening_rush">05:45 PM (Evening Peak)</option>
+        <option value="night">10:00 PM (Night Shift)</option>
+      </select>
+    </div>
+
+    <div class="scenario-group">
+      <span class="scenario-label">🧠 Routing Intelligence</span>
+      <div class="mode-toggle">
+        <button id="modeHybrid" class="mode-btn active">Hybrid AI (ML Matrix)</button>
+        <button id="modeClassical" class="mode-btn">Classical (Distance Only)</button>
+      </div>
+    </div>
+
+    <div class="scenario-group">
+      <div class="solver-stat-chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span id="solveTimeTag">84 ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="main-container">
+    
+    <!-- MAP SECTION -->
+    <section class="map-section">
+      <!-- MAP HUD METRICS CARDS -->
+      <div class="map-hud">
+        <div class="hud-card">
+          <div class="hud-header">
+            <span class="hud-title">Fleet Distance</span>
+            <div class="hud-icon-box icon-box-blue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </div>
+          </div>
+          <div class="hud-value" id="hudDistance">0.0 km</div>
+          <div class="hud-sub" id="hudActiveVehicles">0 Active Trucks</div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-header">
+            <span class="hud-title">ML Mean Delay</span>
+            <div class="hud-icon-box icon-box-amber">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+          </div>
+          <div class="hud-value" id="hudAvgDelay" style="color: #fbbf24;">0.0 min</div>
+          <div class="hud-sub">XGBoost Forecast</div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-header">
+            <span class="hud-title">SLA Compliance</span>
+            <div class="hud-icon-box icon-box-emerald">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+          </div>
+          <div class="hud-value" id="hudSlaRate" style="color: #34d399;">100%</div>
+          <div class="hud-sub" id="hudDelayedStops">0 Delayed Stops</div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-header">
+            <span class="hud-title">CO2 Saved</span>
+            <div class="hud-icon-box icon-box-purple">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+          </div>
+          <div class="hud-value" id="hudCo2">0.0 kg</div>
+          <div class="hud-sub">vs Point-to-Point</div>
+        </div>
+      </div>
+
+      <!-- LEAFLET MAP CANVAS -->
+      <div id="map"></div>
+
+      <!-- FLOATING TOOLBAR DOCK -->
+      <div class="map-floating-bar">
+        <div class="hint-pill">
+          <span class="pulse-dot"></span>
+          <span>Click map to drop order</span>
+        </div>
+
+        <button class="btn btn-secondary btn-sm" id="btnToggleIncidentMode">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="incidentModeText">Drop Roadblock</span>
+        </button>
+
+        <button class="btn btn-secondary btn-sm" id="btnQuickDrop">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Quick Random Order
+        </button>
+
+        <button class="btn btn-accent btn-sm" id="btnSimulate">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span id="simBtnText">Simulate Fleet</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDEBAR DRAWER -->
+    <aside class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" data-tab="tab-fleet">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Fleet & Routes
+        </button>
+        <button class="tab-btn" data-tab="tab-ml">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          ML Insights (XAI)
+        </button>
+        <button class="tab-btn" data-tab="tab-orders">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Orders (<span id="ordersCount">0</span>)
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        
+        <!-- TAB 1: FLEET & ROUTES -->
+        <div id="tab-fleet" class="tab-pane active">
+          <div id="fleetContainer" style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- TAB 2: ML INSIGHTS & EXPLAINABLE AI -->
+        <div id="tab-ml" class="tab-pane" style="display: none;">
+          <div style="background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.86rem; font-weight: 700; margin-bottom: 4px; color: #fff;">XGBoost ETA Regressor Telemetry</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); margin-bottom: 12px;">Gradient boosted tree trained on 25,000 multi-factor delivery dispatches</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center;">
+              <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                <div style="color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase; font-weight: 600;">R² Score</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #34d399;" id="mlR2">0.981</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                <div style="color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase; font-weight: 600;">MAE Error</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #60a5fa;" id="mlMae">1.13 m</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.35); padding: 10px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                <div style="color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase; font-weight: 600;">RMSE</div>
+                <div style="font-size: 1.15rem; font-weight: 800; color: #fbbf24;" id="mlRmse">1.54 m</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 14px;">
+            <div style="font-size: 0.86rem; font-weight: 700; margin-bottom: 4px; color: #fff;">Feature Importance Breakdown (SHAP-Proxy)</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); margin-bottom: 12px;">Relative decision weight driving ETA delay predictions</div>
+            <div style="height: 230px; position: relative;">
+              <canvas id="featureChart"></canvas>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-top: 14px;">
+            <div style="font-size: 0.86rem; font-weight: 700; margin-bottom: 4px; color: #fff;">Segment Delay Sandbox (What-If Simulator)</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); margin-bottom: 12px;">Live inference test on arbitrary segment distance and traffic parameters:</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.75rem;">
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="color: var(--text-muted);">Segment Distance:</span>
+                  <strong style="color: #fff;"><span id="sandboxDistVal">6.5</span> km</strong>
+                </div>
+                <input type="range" id="sandboxDist" class="slider-input" min="0.5" max="25" step="0.5" value="6.5" style="width: 100%;">
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="color: var(--text-muted);">Traffic Multiplier:</span>
+                  <strong style="color: #fbbf24;"><span id="sandboxTrafVal">1.8</span>x</strong>
+                </div>
+                <input type="range" id="sandboxTraf" class="slider-input" min="1.0" max="2.8" step="0.1" value="1.8" style="width: 100%;">
+              </div>
+
+              <div style="margin-top: 6px; padding: 12px; background: rgba(0,0,0,0.35); border-radius: 8px; border: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase;">Nominal Time</div>
+                  <div style="font-weight: 700; font-size: 0.95rem;" id="sandboxNominal">10.3 min</div>
+                </div>
+                <div>
+                  <div style="color: #fbbf24; font-size: 0.68rem; text-transform: uppercase;">Predicted Delay</div>
+                  <div style="font-weight: 800; font-size: 1.05rem; color: #fbbf24;" id="sandboxDelay">+7.4 min</div>
+                </div>
+                <div>
+                  <div style="color: #34d399; font-size: 0.68rem; text-transform: uppercase;">Adjusted ETA</div>
+                  <div style="font-weight: 800; font-size: 1.05rem; color: #34d399;" id="sandboxTotal">17.7 min</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ORDERS QUEUE -->
+        <div id="tab-orders" class="tab-pane" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: #fff;">Active Demands</span>
+            <button class="btn btn-secondary btn-sm" id="btnManualAddOrder">+ Add Order</button>
+          </div>
+          <div id="ordersListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+
+  <!-- MODAL: DROP ORDER -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Drop New Delivery Order</h3>
+        <button class="btn btn-secondary btn-sm" id="btnCloseOrderModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Customer / Destination Name</label>
+          <input type="text" id="orderCustomerName" class="text-input" placeholder="e.g. Acme Health Clinic" value="New Customer Delivery">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Latitude</label>
+            <input type="number" id="orderLat" class="text-input" step="0.0001" readonly>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Longitude</label>
+            <input type="number" id="orderLng" class="text-input" step="0.0001" readonly>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+            <span>Cargo Payload</span>
+            <span style="color: #60a5fa;"><span id="orderDemandVal">25</span> kg</span>
+          </div>
+          <input type="range" id="orderDemand" class="slider-input" min="5" max="80" step="5" value="25" style="width: 100%;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Earliest Window (min)</label>
+            <input type="number" id="orderTwStart" class="text-input" value="30" min="0" max="480">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">SLA Deadline (min)</label>
+            <input type="number" id="orderTwEnd" class="text-input" value="240" min="30" max="480">
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Priority Tier</label>
+          <select id="orderPriority" class="select-input">
+            <option value="1">Urgent / Priority 1 (SLA Critical)</option>
+            <option value="2" selected>Standard / Priority 2</option>
+            <option value="3">Flexible / Priority 3</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelOrderModal">Cancel</button>
+        <button class="btn btn-primary" id="btnSubmitOrderModal">Drop & Re-Optimize</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SIDE-BY-SIDE COMPARISON (CLASSICAL VS AI) -->
+  <div class="modal-overlay" id="compareModal">
+    <div class="modal-box" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3>Classical OR-Tools vs. RouteMind Hybrid AI</h3>
+        <button class="btn btn-secondary btn-sm" id="btnCloseCompareModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          Classical routing algorithms assume constant free-flow speed and optimize solely for geographic shortest distance. In real-world cities, rain and rush hour create non-linear bottlenecks that break delivery promises. RouteMind injects XGBoost transit delay predictions into OR-Tools to preemptively bypass traffic hotspots.
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <!-- CLASSICAL CARD -->
+          <div style="background: rgba(244, 63, 94, 0.05); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-md); padding: 18px;">
+            <div style="font-size: 0.9rem; font-weight: 800; color: #fda4af; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>Classical OR-Tools</span>
+              <span style="font-size: 0.65rem; background: rgba(244, 63, 94, 0.2); padding: 2px 6px; border-radius: 4px;">Distance Only</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.78rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Total Fleet Distance:</span>
+                <span style="font-weight: 700; color: #fff;" id="cmpClassicalDist">-- km</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Avg Delivery Delay:</span>
+                <span style="font-weight: 700; color: #f43f5e;" id="cmpClassicalDelay">-- min</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">SLA Success Rate:</span>
+                <span style="font-weight: 700; color: #fff;" id="cmpClassicalSla">-- %</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Late / Delayed Stops:</span>
+                <span style="font-weight: 700; color: #f43f5e;" id="cmpClassicalLate">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HYBRID AI CARD -->
+          <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-md); padding: 18px;">
+            <div style="font-size: 0.9rem; font-weight: 800; color: #34d399; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>RouteMind Hybrid AI</span>
+              <span style="font-size: 0.65rem; background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 4px;">OR + XGBoost</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.78rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Total Fleet Distance:</span>
+                <span style="font-weight: 700; color: #fff;" id="cmpHybridDist">-- km</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Avg Delivery Delay:</span>
+                <span style="font-weight: 700; color: #34d399;" id="cmpHybridDelay">-- min</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">SLA Success Rate:</span>
+                <span style="font-weight: 700; color: #34d399;" id="cmpHybridSla">-- %</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-dim);">Late / Delayed Stops:</span>
+                <span style="font-weight: 700; color: #34d399;" id="cmpHybridLate">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="cmpSummaryBanner" style="background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-sm); padding: 14px; font-size: 0.82rem; color: #c7d2fe; line-height: 1.5; font-weight: 500;">
+          Loading comparison...
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCloseCompareFooter">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- CDN SCRIPTS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- APP SCRIPTS -->
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/map.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
