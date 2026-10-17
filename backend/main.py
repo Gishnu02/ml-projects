@@ -159,6 +159,13 @@ if os.path.exists(frontend_dir):
     def serve_frontend_index():
         return FileResponse(os.path.join(frontend_dir, "index.html"))
 
+    @app.get("/portfolio")
+    def serve_portfolio():
+        portfolio_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "portfolio.html")
+        if os.path.exists(portfolio_file):
+            return FileResponse(portfolio_file)
+        return FileResponse(os.path.join(frontend_dir, "index.html"))
+
 
 if __name__ == "__main__":
     uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=False)
