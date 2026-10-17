@@ -153,7 +153,7 @@ The XGBoost model (`backend/models/ml_eta.py`) predicts segment-level transit de
 
 ## 🖥️ Live Map Dashboard Features
 
-The frontend is a single-page dark-mode application accessible at `http://127.0.0.1:8000`:
+The frontend is an interactive single-page dark-mode application:
 
 1. **Interactive CartoDB Dark Leaflet Map**:
    - **Click to Drop Order**: Click on any street or neighborhood to pop up the order creation modal. Specify customer name, cargo demand (kg), and SLA deadlines. The fleet immediately re-optimizes.
@@ -205,18 +205,17 @@ The frontend is a single-page dark-mode application accessible at `http://127.0.
 - Modern web browser (Chrome, Edge, Firefox, Safari)
 
 ### Setup & Launch
-```powershell
-# 1. Navigate to workspace
-cd e:\logistics
+```bash
+# 1. Clone repository
+git clone https://github.com/Gishnu02/ml-projects.git
+cd ml-projects
 
-# 2. Run the application (uses existing virtual environment)
-.\venv\Scripts\python run.py
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Launch application
+python run.py
 ```
-
-### Accessing the System
-- **Web Dashboard**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- **Interactive Swagger Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **ReDoc API Spec**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ---
 
