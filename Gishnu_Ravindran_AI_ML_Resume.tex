@@ -2,10 +2,10 @@
 % Resume in LaTeX - ATS Optimized
 % Candidate: Gishnu Ravindran
 % Role: AI / ML Engineer
-% Alignment: Fully fixed text collisions, margins, and page breaks
+% Alignment: Clean 1-Page High-Impact Layout (Zero Awkward Splits)
 %------------------------
 
-\documentclass[letterpaper,10pt]{article}
+\documentclass[letterpaper,9.5pt]{article}
 
 \usepackage{latexsym}
 \usepackage[empty]{fullpage}
@@ -17,14 +17,14 @@
 \usepackage{fancyhdr}
 \usepackage[english]{babel}
 
+% Compact geometry to perfectly fit 1 single page with zero overflow
+\usepackage[top=0.36in, bottom=0.36in, left=0.42in, right=0.42in]{geometry}
+
 \pagestyle{fancy}
 \fancyhf{}
 \fancyfoot{}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-
-% Precision margins: 0.45in all around to guarantee clean fit
-\usepackage[margin=0.45in]{geometry}
 
 \urlstyle{same}
 \raggedbottom
@@ -32,25 +32,25 @@
 
 % Section formatting with clean Navy Blue rule
 \titleformat{\section}{
-  \vspace{-3pt}\scshape\raggedright\large\color{NavyBlue}
-}{}{0em}{}[\color{NavyBlue}\titlerule \vspace{-4pt}]
+  \vspace{-5pt}\scshape\raggedright\normalsize\color{NavyBlue}\textbf
+}{}{0em}{}[\color{NavyBlue}\titlerule \vspace{-5pt}]
 
-% Custom list environments with tight, professional spacing
+% Custom list environments with clean ATS-friendly spacing
 \newcommand{\resumeItem}[1]{
   \item\small{
-    {#1 \vspace{-2pt}}
+    {#1 \vspace{-2.5pt}}
   }
 }
 
 \renewcommand\labelitemi{\raisebox{0.25ex}{\tiny$\bullet$}}
-\setlist[itemize]{leftmargin=12pt, itemsep=2pt, topsep=2pt, parsep=0pt, partopsep=0pt}
+\setlist[itemize]{leftmargin=11pt, itemsep=1.5pt, topsep=1.5pt, parsep=0pt, partopsep=0pt}
 
 \begin{document}
 
 %----------HEADER / CONTACT----------
 \begin{center}
-    {\Huge \textbf{\scshape Gishnu Ravindran}} \\ \vspace{3pt}
-    {\large \textbf{\color{NavyBlue} AI / ML Engineer}} \\ \vspace{4pt}
+    {\LARGE \textbf{\scshape Gishnu Ravindran}} \\ \vspace{2pt}
+    {\normalsize \textbf{\color{NavyBlue} AI / ML Engineer}} \\ \vspace{3pt}
     \small{
       +91 9778156037 \enspace$|$\enspace 
       \href{mailto:gishnuravindran02@gmail.com}{gishnuravindran02@gmail.com} \enspace$|$\enspace 
@@ -58,7 +58,7 @@
       \href{https://github.com/Gishnu02}{github.com/Gishnu02}
     }
 \end{center}
-\vspace{-8pt}
+\vspace{-10pt}
 
 %-----------PROFESSIONAL SUMMARY-----------
 \section{Professional Summary}
@@ -77,7 +77,7 @@ Results-driven \textbf{AI / ML Engineer} with hands-on expertise in developing, 
      \textbf{Backend \& Deployment:}{ FastAPI, Django, Flask, RESTful APIs, Git, GitHub, Docker, Linux, Uvicorn}
     }
 \end{itemize}
-\vspace{-6pt}
+\vspace{-7pt}
 
 %-----------WORK EXPERIENCE-----------
 \section{Experience}
@@ -87,64 +87,63 @@ Results-driven \textbf{AI / ML Engineer} with hands-on expertise in developing, 
   \begin{itemize}
     \resumeItem{Architect, train, and deploy production machine learning algorithms and computer vision pipelines for intelligent automation.}
     \resumeItem{Develop robust data preprocessing and feature extraction workflows to handle multi-sensor and telemetry data streams.}
-    \resumeItem{Optimize model inference latency and memory footprints, containerizing microservices using \textbf{FastAPI} and \textbf{Docker} for scalable edge and cloud deployment.}
-    \resumeItem{Implement continuous model evaluation, drift monitoring, and automated retraining pipelines to maintain high predictive accuracy in production.}
+    \resumeItem{Optimize model inference latency and containerize microservices using \textbf{FastAPI} and \textbf{Docker} for scalable cloud/edge deployment.}
+    \resumeItem{Implement continuous model evaluation, drift monitoring, and automated retraining pipelines to maintain high predictive accuracy.}
   \end{itemize}
 
-  \vspace{3pt}
+  \vspace{2pt}
   \textbf{Codedu Technologies} \hfill Aug 2025 -- Apr 2026 \\
   \textit{\small Python Developer Intern} \hfill \textit{\small Kochi, Kerala}
   \begin{itemize}
     \resumeItem{Engineered scalable backend microservices, data ingestion pipelines, and RESTful APIs using \textbf{Python} and \textbf{Django / FastAPI}.}
-    \resumeItem{Automated data extraction, cleaning, and transformation workflows, slashing manual data preprocessing turnaround time by \textbf{35\%}.}
+    \resumeItem{Automated data extraction, cleaning, and transformation workflows, slashing manual preprocessing turnaround time by \textbf{35\%}.}
     \resumeItem{Designed relational database schemas and optimized SQL queries to support high-throughput data transactions.}
-    \resumeItem{Collaborated in an agile engineering team, contributing to code reviews, unit testing, and Git version control workflows across the software development lifecycle.}
+    \resumeItem{Collaborated in an agile team, contributing to code reviews, unit testing, and Git version control workflows.}
   \end{itemize}
 
-  \vspace{3pt}
+  \vspace{2pt}
   \textbf{Realweb} \hfill Aug 2024 -- Jul 2025 \\
   \textit{\small Software Developer Trainee} \hfill \textit{\small Kochi, Kerala}
   \begin{itemize}
     \resumeItem{Developed modular backend scripts and functional components in Python, integrating core web services with databases.}
     \resumeItem{Collaborated with senior engineers to troubleshoot application logic, improve code reusability, and resolve performance bottlenecks.}
-    \resumeItem{Assisted in building analytics dashboards and internal tooling to track system uptime and workflow metrics.}
   \end{itemize}
+\vspace{-2pt}
 
-%-----------PROJECTS-----------
+%-----------KEY AI / ML PROJECTS-----------
 \section{Key AI / ML Projects}
 
-  \textbf{RouteMind -- AI Route Optimization \& Dynamic ETA Prediction Platform} \hfill \href{https://github.com/Gishnu02/ml-projects}{\color{NavyBlue}\small github.com/Gishnu02/ml-projects} \\
-  \textit{\small Technologies: Python, Google OR-Tools (CVRPTW), XGBoost, FastAPI, Pandas, NumPy, Leaflet}
+  \textbf{RouteMind -- AI Route Optimization \& Dynamic ETA Prediction Platform} \hfill Jan 2026 \\
+  \textit{\small Technologies: Python, Google OR-Tools (CVRPTW), XGBoost, FastAPI, Pandas, Leaflet} \hfill \href{https://github.com/Gishnu02/ml-projects}{\color{NavyBlue}\small github.com/Gishnu02/ml-projects}
   \begin{itemize}
     \resumeItem{Developed a hybrid AI dispatch platform combining \textbf{Google OR-Tools} (CVRPTW) with an \textbf{XGBoost Regressor} to predict delivery delays and dynamically optimize multi-vehicle delivery routes.}
     \resumeItem{Trained an XGBoost regressor achieving an \mbox{$\mathbf{R^2}$ \textbf{score of 0.9814}} and \textbf{MAE of 1.13 minutes} across 25,000 delivery dispatches considering weather conditions, traffic multipliers, and road incidents.}
-    \resumeItem{Constructed an ML-adjusted duration cost matrix fed directly into constraint programming algorithms, proactively routing fleets around congestion bottlenecks to preserve customer SLAs.}
-    \resumeItem{Engineered continuous sub-100ms re-optimization triggered by interactive map order drops, roadblocks, and changing environmental conditions.}
+    \resumeItem{Constructed an ML-adjusted duration cost matrix fed directly into constraint programming algorithms, proactively routing fleets around congestion bottlenecks to preserve customer SLAs with sub-100ms re-optimization.}
   \end{itemize}
 
-  \vspace{3pt}
-  \textbf{Signify -- Real-Time Sign Language Translation System} \hfill \textit{\small Computer Vision / Deep Learning} \\
+  \vspace{2pt}
+  \textbf{Signify -- Real-Time Sign Language Translation System} \hfill Mar 2024 \\
   \textit{\small Technologies: Python, OpenCV, MediaPipe, Deep Neural Networks (DNN), TensorFlow, NumPy}
   \begin{itemize}
     \resumeItem{Engineered a real-time computer vision system that translates Indian/American Sign Language hand gestures into synthesized text and speech.}
-    \resumeItem{Extracted 21 3D hand coordinates per frame using \textbf{MediaPipe} and trained a Deep Neural Network (DNN) classifier achieving \textbf{94\%+ classification accuracy}.}
-    \resumeItem{Optimized frame processing and inference pipeline for low-latency execution on standard consumer webcams without dedicated GPU requirements.}
+    \resumeItem{Extracted 21 3D hand coordinates per frame using \textbf{MediaPipe} and trained a Deep Neural Network (DNN) achieving \textbf{94\%+ accuracy} with low-latency inference on standard consumer webcams.}
   \end{itemize}
 
-  \vspace{3pt}
-  \textbf{Automatic Concrete Crack Detection System using Deep Learning} \hfill \textit{\small Final Year Project Award Winner} \\
-  \textit{\small Technologies: Python, Deep Neural Networks (DNN), IoT Telemetry, Computer Vision}
+  \vspace{2pt}
+  \textbf{Automatic Concrete Crack Detection System using Deep Learning} \hfill 2024 -- 2025 \\
+  \textit{\small Final Year Project $|$ Technologies: Python, Deep Neural Networks (DNN), IoT Telemetry, Computer Vision}
   \begin{itemize}
     \resumeItem{Engineered an automated structural health monitoring system detecting micro-cracks in concrete structures using sensor data and Deep Neural Networks (DNN).}
-    \resumeItem{Implemented computer vision filtering, edge enhancement, and noise reduction techniques for accurate crack segmentation and severity grading.}
-    \resumeItem{Integrated telemetry hardware with predictive ML software for automated safety alerts and predictive structural maintenance.}
+    \resumeItem{Implemented computer vision filtering, edge enhancement, and noise reduction techniques for crack segmentation and severity grading.}
     \resumeItem{\textbf{Awarded Best Internal Project Award} at the Srishti National Level Project Competition 2025.}
   \end{itemize}
+\vspace{-2pt}
 
 %-----------EDUCATION-----------
 \section{Education}
   \textbf{Saintgits College of Engineering} \hfill 2021 -- 2025 \\
   \textit{\small Bachelor of Technology (B.Tech) in Electronics and Communication Engineering} \hfill \textit{\small Kottayam, Kerala}
+\vspace{-2pt}
 
 %-----------ACHIEVEMENTS & LEADERSHIP-----------
 \section{Achievements \& Leadership}
@@ -153,6 +152,7 @@ Results-driven \textbf{AI / ML Engineer} with hands-on expertise in developing, 
   \resumeItem{\textbf{Creative Head -- AI Club:} Spearheaded technical machine learning sessions, hands-on workshops, and hackathons at Saintgits College.}
   \resumeItem{\textbf{Media Head -- TinkerHub Saintgits:} Led campus developer community initiatives, coding meetups, and technical workshops.}
 \end{itemize}
+\vspace{-2pt}
 
 %-----------CERTIFICATIONS-----------
 \section{Certifications}
